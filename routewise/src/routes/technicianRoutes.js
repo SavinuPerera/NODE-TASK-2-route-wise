@@ -6,6 +6,10 @@ function makeDate(date, time) {
   return new Date(date + 'T' + time);
 }
 
+function makeEndDate(startDate, duration) {
+  return new Date(startDate.getTime() + duration * 60 * 1000);
+}
+
 function getTechnicianById(id) {
   for (let i = 0; i < store.technicians.length; i++) {
     if (store.technicians[i].id === id) {
