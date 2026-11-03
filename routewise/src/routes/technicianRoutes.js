@@ -1,6 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { technicians } = require('../data/store');
+const store = require('../data/store');
+
+function makeDate(date, time) {
+  return new Date(date + 'T' + time);
+}
+
+function makeEndDate(startDate, duration) {
+  return new Date(startDate.getTime() + duration * 60 * 1000);
+}
+
+function getTechnicianById(id) {
+  for (let i = 0; i < store.technicians.length; i++) {
+    if (store.technicians[i].id === id) {
+      return store.technicians[i];
+    }
+  }
+  return null;
+}
 
 function formatTimeTo24Hours(timeInput) {
   if (!timeInput) return "";
@@ -16,8 +33,8 @@ function formatTimeTo24Hours(timeInput) {
 router.get('/technicians', (req, res) => {
   try {
     let result = [];
-    for (let i = 0; i < technicians.length; i++) {
-      let t = technicians[i];
+    for (let i = 0; i < store.technicians.length; i++) {
+      let t = store.technicians[i];
       result.push({
         id: t.id,
         name: t.name,
@@ -39,14 +56,7 @@ router.get('/technicians', (req, res) => {
 router.get('/technicians/:id', (req, res) => {
   try {
     let techId = req.params.id;
-    let target = null;
-    
-    for (let t of technicians) {
-      if (t.id === techId) {
-        target = t;
-        break;
-      }
-    }
+    let target = getTechnicianById(techId);
 
     if (!target) {
       return res.status(404).json({ success: false, message: "Technician not found with ID: " + techId });
