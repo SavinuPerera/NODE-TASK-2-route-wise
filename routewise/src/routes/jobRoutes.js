@@ -1,19 +1,11 @@
-const express = require('express');
-const router = express.Router();
+let express = require("express");
+let router = express.Router();
 
-const priorities = ['LOW', 'NORMAL', 'HIGH', 'URGENT'];
-const statuses = ['PENDING', 'ASSIGNED', 'ON_THE_WAY', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
+let job = require("../services/jobService");
 
-const transitions = {
-  PENDING: ['ASSIGNED', 'CANCELLED'],
-  ASSIGNED: ['ON_THE_WAY', 'CANCELLED'],
-  ON_THE_WAY: ['IN_PROGRESS'],
-  IN_PROGRESS: ['COMPLETED'],
-  COMPLETED: [],
-  CANCELLED: [],
-};
-
-const minDuration = 30;
-const maxDuration = 240;
+router.get("/", job.all);
+router.get("/:id", job.one);
+router.post("/", job.add);
+router.patch("/:id/status", job.update);
 
 module.exports = router;
