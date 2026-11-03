@@ -1,0 +1,12 @@
+{
+  "name": "routewise",
+  "version": "1.0.0",
+  "description": "RouteWise Smart Field Service Dispatch System API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
