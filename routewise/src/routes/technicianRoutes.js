@@ -6,10 +6,6 @@ function makeDate(date, time) {
   return new Date(date + 'T' + time);
 }
 
-function makeEndDate(startDate, duration) {
-  return new Date(startDate.getTime() + duration * 60 * 1000);
-}
-
 function getTechnicianById(id) {
   for (let i = 0; i < store.technicians.length; i++) {
     if (store.technicians[i].id === id) {
@@ -17,17 +13,6 @@ function getTechnicianById(id) {
     }
   }
   return null;
-}
-
-function formatTimeTo24Hours(timeInput) {
-  if (!timeInput) return "";
-  let dateObj = new Date(timeInput);
-  if (isNaN(dateObj.getTime())) {
-    return timeInput; 
-  }
-  let hours = String(dateObj.getHours()).padStart(2, '0');
-  let minutes = String(dateObj.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
 }
 
 router.get('/technicians', (req, res) => {
@@ -40,8 +25,8 @@ router.get('/technicians', (req, res) => {
         name: t.name,
         skills: t.skills,
         zone: t.zone,
-        availableFrom: formatTimeTo24Hours(t.availableFrom),
-        availableTo: formatTimeTo24Hours(t.availableTo),
+        availableFrom: t.availableFrom,
+        availableTo: t.availableTo,
         maxJobsPerDay: t.maxJobsPerDay,
         assignedJobIds: t.assignedJobIds,
         unavailableSlots: t.unavailableSlots
@@ -62,13 +47,7 @@ router.get('/technicians/:id', (req, res) => {
       return res.status(404).json({ success: false, message: "Technician not found with ID: " + techId });
     }
 
-    let formattedTech = {
-      ...target,
-      availableFrom: formatTimeTo24Hours(target.availableFrom),
-      availableTo: formatTimeTo24Hours(target.availableTo)
-    };
-
-    return res.status(200).json({ success: true, data: formattedTech });
+    return res.status(200).json({ success: true, data: target });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
